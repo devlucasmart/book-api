@@ -4,6 +4,7 @@ import com.devlucasmart.book.comum.exception.ValidacaoException;
 import com.devlucasmart.book.dto.categoria.CategoriaRequest;
 import com.devlucasmart.book.dto.categoria.CategoriaResponse;
 import com.devlucasmart.book.mappers.CategoriaMapper;
+import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.model.CategoriaModel;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
@@ -36,13 +37,19 @@ public class CategoriaService {
         return null;
     }
 
-    //TODO Implementar validação se categoria estar vazia antes de deletar
     public void delete(Integer id){
         var categoria = getById(id);
+        validaCategoriaSemBooks(categoria);
         repository.deleteById(categoria.getId());
     }
 
     private CategoriaModel getById(Integer id){
         return repository.findById(id).orElseThrow(() -> new ValidacaoException("Categoria não Encontrada!!"));
+    }
+
+    private void validaCategoriaSemBooks(CategoriaModel categoria){
+        if (!categoria.getBooks().isEmpty()) {
+            throw new ValidacaoException("Categoria possui books associados!!");
+        }
     }
 }
