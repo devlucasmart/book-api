@@ -1,7 +1,9 @@
-package com.modulos.comum.controller;
+package com.devlucasmart.book.comum.controller;
 
-import com.modulos.comum.exception.ValidacaoException;
-import com.modulos.comum.model.MessageException;
+import com.devlucasmart.book.comum.exception.ValidacaoException;
+import com.devlucasmart.book.comum.model.MessageException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.ObjectUtils;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

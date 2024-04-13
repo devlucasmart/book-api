@@ -1,4 +1,4 @@
-package com.modulos.comum.exception;
+package com.devlucasmart.book.comum.exception;
 
 public class ValidacaoException extends RuntimeException {
 

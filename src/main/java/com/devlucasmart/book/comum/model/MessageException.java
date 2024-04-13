@@ -1,4 +1,4 @@
-package com.modulos.comum.model;
+package com.devlucasmart.book.comum.model;
 
 import lombok.Data;
 
