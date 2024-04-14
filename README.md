@@ -2,6 +2,7 @@
 
 ![Java](https://img.shields.io/badge/Java-17-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.1.10-brightgreen.svg)
+![Spring Boot](https://img.shields.io/badge/CheckStyle-3.0.0-red.svg)
 ![MapStruct](https://img.shields.io/badge/MapStruct-1.5.3.Final-orange.svg)
 ![Maven](https://img.shields.io/badge/Maven-3.8.4-yellow.svg)
 
