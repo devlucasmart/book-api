@@ -1,5 +1,6 @@
 package com.devlucasmart.book.helper;
 
+import com.devlucasmart.book.dto.book.BookRequest;
 import com.devlucasmart.book.dto.book.BookResponse;
 import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.model.CategoriaModel;
@@ -14,6 +15,15 @@ public class BookHelper {
     public static BookModel umBook() {
         return BookModel.builder()
                 .id(1)
+                .nome("UM programador 1")
+                .autor("Lucas Martins Arruda")
+                .categoria(umaCategoria())
+                .dataLancamento(LocalDateTime.of(2023, 1, 1, 12, 0))
+                .build();
+    }
+
+    public static BookRequest umBookRequest() {
+        return BookRequest.builder()
                 .nome("UM programador 1")
                 .autor("Lucas Martins Arruda")
                 .categoria(umaCategoria())

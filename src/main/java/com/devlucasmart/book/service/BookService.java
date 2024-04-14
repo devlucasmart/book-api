@@ -4,12 +4,15 @@ import com.devlucasmart.book.comum.exception.ValidacaoException;
 import com.devlucasmart.book.dto.book.BookRequest;
 import com.devlucasmart.book.dto.book.BookResponse;
 import com.devlucasmart.book.mappers.BookMapper;
+import com.devlucasmart.book.mappers.CategoriaMapper;
 import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.repository.BookRepository;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -17,7 +20,7 @@ import java.util.List;
 public class BookService {
     private final BookRepository repository;
     private final CategoriaRepository categoriaRepository;
-    private final BookMapper mapper;
+    private final BookMapper mapper = Mappers.getMapper(BookMapper.class);
 
 
     public List<BookResponse> findAll() {
@@ -31,7 +34,11 @@ public class BookService {
     }
 
     public BookResponse save(BookRequest request) {
-        return null;
+        validaCategoria(request.getCategoria().getId());
+        var book = mapper.toDomain(request);
+        book.setDataLancamento(LocalDateTime.now());
+        repository.save(book);
+        return mapper.toResponse(book);
     }
 
     public BookResponse update(Integer id, BookRequest request) {
@@ -45,5 +52,9 @@ public class BookService {
 
     private BookModel getById(Integer id) {
         return repository.findById(id).orElseThrow(() -> new ValidacaoException("Book não Encontrado!!"));
+    }
+
+    private void validaCategoria(Integer categoriaId){
+        categoriaRepository.findById(categoriaId).orElseThrow(() -> new ValidacaoException("Categoria Não encontrada!!"));
     }
 }

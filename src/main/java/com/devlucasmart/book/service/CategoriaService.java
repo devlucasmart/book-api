@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -31,7 +32,9 @@ public class CategoriaService {
     }
 
     public CategoriaResponse save(CategoriaRequest request){
-        return null;
+        var categoria = mapper.toDomain(request);
+        categoria.setDataCriacao(LocalDateTime.now());
+        return mapper.toResponse(repository.save(categoria));
     }
     public CategoriaResponse update(Integer id, CategoriaRequest request){
         return null;

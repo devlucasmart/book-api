@@ -1,5 +1,6 @@
 package com.devlucasmart.book.service;
 
+import com.devlucasmart.book.comum.exception.ValidacaoException;
 import com.devlucasmart.book.dto.book.BookResponse;
 import com.devlucasmart.book.mappers.BookMapper;
 import com.devlucasmart.book.repository.BookRepository;
@@ -16,9 +17,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 import static com.devlucasmart.book.helper.BookHelper.umBook;
+import static com.devlucasmart.book.helper.BookHelper.umBookRequest;
+import static com.devlucasmart.book.helper.BookHelper.umaCategoria;
 import static com.devlucasmart.book.helper.BookHelper.umaListaBook;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @SpringBootTest
@@ -39,7 +45,6 @@ public class BookServiceTest {
         var listBook = umaListaBook();
 
         doReturn(listBook).when(repository).findAll();
-
         var result = bookService.findAll();
 
         verify(repository).findAll();
@@ -59,5 +64,54 @@ public class BookServiceTest {
 
         verify(repository).findById(1);
         verify(mapper).toResponse(book);
+    }
+
+    @Test
+    public void findById_deveRetornarExceptionBookNaoExistente(){
+        assertThatThrownBy(() -> bookService.findById(4))
+                .isInstanceOf(ValidacaoException.class)
+                .hasMessage("Book não Encontrado!!");
+
+        verify(repository).findById(4);
+        verify(mapper, never()).toResponse(any());
+    }
+
+    @Test
+    public void save_deveSalvarBook(){
+        var bookRequest = umBookRequest();
+        var categoria = umaCategoria();
+        var book = umBook();
+
+        doReturn(book).when(mapper).toDomain(bookRequest);
+        doReturn(book).when(repository).save(book);
+        doReturn(Optional.of(categoria)).when(categoriaRepository).findById(1);
+
+        bookService.save(bookRequest);
+
+        verify(mapper).toDomain(bookRequest);
+        verify(repository).save(book);
+        verify(categoriaRepository).findById(1);
+    }
+
+    @Test
+    public void save_deveRetornarExceptionQuandoCategoriaNaoExistente(){}
+
+    @Test
+    public void update_deveAtualizarBook(){}
+
+    @Test
+    public void update_deveRetornarExceptionQuandoBookNaoExistente(){}
+
+    @Test
+    public void update_deveRetornarExceptionQuandoCategoriaNaoExistente(){}
+
+    @Test
+    public void delete_deveDeletarBook(){
+        doReturn(Optional.of(umBook())).when(repository).findById(1);
+
+        bookService.delete(1);
+
+        verify(repository).deleteById(1);
+        verify(repository).findById(1);
     }
 }
