@@ -7,6 +7,7 @@ import com.devlucasmart.book.model.CategoriaModel;
 import org.springframework.beans.BeanUtils;
 
 import java.awt.print.Book;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,16 @@ public class BookHelper {
                 .nome("UM programador 1")
                 .autor("Lucas Martins Arruda")
                 .categoria(umaCategoria())
-                .dataLancamento(LocalDateTime.of(2023, 1, 1, 12, 0))
+                .dataLancamento(LocalDate.of(2023, 1, 1))
+                .build();
+    }
+
+    public static BookModel umBookNovo(BookRequest request) {
+        return BookModel.builder()
+                .nome(request.getNome())
+                .autor(request.getAutor())
+                .categoria(request.getCategoria())
+                .dataLancamento(request.getDataLancamento())
                 .build();
     }
 
@@ -27,7 +37,7 @@ public class BookHelper {
                 .nome("UM programador 1")
                 .autor("Lucas Martins Arruda")
                 .categoria(umaCategoria())
-                .dataLancamento(LocalDateTime.of(2023, 1, 1, 12, 0))
+                .dataLancamento(LocalDate.of(2023, 1, 1))
                 .build();
     }
 
@@ -37,7 +47,7 @@ public class BookHelper {
                 .nome("UM programador 2")
                 .autor("Lucas Martins Arruda")
                 .categoria(umaCategoria())
-                .dataLancamento(LocalDateTime.of(2023, 1, 1, 12, 0))
+                .dataLancamento(LocalDate.of(2023, 1, 1))
                 .build();
     }
 
@@ -47,7 +57,7 @@ public class BookHelper {
                 .nome("UM programador 3")
                 .autor("Lucas Martins Arruda")
                 .categoria(umaCategoria())
-                .dataLancamento(LocalDateTime.of(2023, 1, 1, 12, 0))
+                .dataLancamento(LocalDate.of(2023, 1, 1))
                 .build();
     }
 
@@ -80,6 +90,7 @@ public class BookHelper {
         return CategoriaModel.builder()
                 .id(1)
                 .nome("Ação")
+                .dataCriacao(LocalDate.of(2023, 1, 1))
                 .build();
     }
 }

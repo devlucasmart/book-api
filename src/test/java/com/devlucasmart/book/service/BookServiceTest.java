@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 import static com.devlucasmart.book.helper.BookHelper.umBook;
+import static com.devlucasmart.book.helper.BookHelper.umBookNovo;
 import static com.devlucasmart.book.helper.BookHelper.umBookRequest;
 import static com.devlucasmart.book.helper.BookHelper.umaCategoria;
 import static com.devlucasmart.book.helper.BookHelper.umaListaBook;
@@ -54,7 +55,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void findById_deveRetornarBookPeloId(){
+    public void findById_deveRetornarBookPeloId() {
         var book = umBook();
         var response = new BookResponse();
         doReturn(Optional.of(book)).when(repository).findById(1);
@@ -67,7 +68,7 @@ public class BookServiceTest {
     }
 
     @Test
-    public void findById_deveRetornarExceptionBookNaoExistente(){
+    public void findById_deveRetornarExceptionBookNaoExistente() {
         assertThatThrownBy(() -> bookService.findById(4))
                 .isInstanceOf(ValidacaoException.class)
                 .hasMessage("Book não Encontrado!!");
@@ -77,36 +78,39 @@ public class BookServiceTest {
     }
 
     @Test
-    public void save_deveSalvarBook(){
-        var bookRequest = umBookRequest();
-        var categoria = umaCategoria();
-        var book = umBook();
+    public void save_deveSalvarBook() {
+        var request = umBookRequest();
+        var bookNovo = umBookNovo(request);
 
-        doReturn(book).when(mapper).toDomain(bookRequest);
-        doReturn(book).when(repository).save(book);
-        doReturn(Optional.of(categoria)).when(categoriaRepository).findById(1);
+        doReturn(Optional.of(umaCategoria())).when(categoriaRepository).findById(1);
+        doReturn(bookNovo).when(mapper).toDomain(request);
+        doReturn(bookNovo).when(repository).save(bookNovo);
 
-        bookService.save(bookRequest);
+        bookService.save(request);
 
-        verify(mapper).toDomain(bookRequest);
-        verify(repository).save(book);
-        verify(categoriaRepository).findById(1);
+        verify(repository).save(bookNovo);
+        verify(mapper).toDomain(request);
+        verify(mapper).toResponse(bookNovo);
     }
 
     @Test
-    public void save_deveRetornarExceptionQuandoCategoriaNaoExistente(){}
+    public void save_deveRetornarExceptionQuandoCategoriaNaoExistente() {
+    }
 
     @Test
-    public void update_deveAtualizarBook(){}
+    public void update_deveAtualizarBook() {
+    }
 
     @Test
-    public void update_deveRetornarExceptionQuandoBookNaoExistente(){}
+    public void update_deveRetornarExceptionQuandoBookNaoExistente() {
+    }
 
     @Test
-    public void update_deveRetornarExceptionQuandoCategoriaNaoExistente(){}
+    public void update_deveRetornarExceptionQuandoCategoriaNaoExistente() {
+    }
 
     @Test
-    public void delete_deveDeletarBook(){
+    public void delete_deveDeletarBook() {
         doReturn(Optional.of(umBook())).when(repository).findById(1);
 
         bookService.delete(1);
