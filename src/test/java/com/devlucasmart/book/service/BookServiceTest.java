@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 import static com.devlucasmart.book.helper.BookHelper.umBook;
@@ -22,6 +23,7 @@ import static com.devlucasmart.book.helper.BookHelper.umBookRequest;
 import static com.devlucasmart.book.helper.BookHelper.umaCategoria;
 import static com.devlucasmart.book.helper.BookHelper.umaListaBook;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -95,18 +97,73 @@ public class BookServiceTest {
 
     @Test
     public void save_deveRetornarExceptionQuandoCategoriaNaoExistente() {
+        assertThatThrownBy(() -> bookService.save(umBookRequest()))
+                .isInstanceOf(ValidacaoException.class)
+                .hasMessage("Categoria Não encontrada!!");
+
+        verify(categoriaRepository).findById(1);
+        verify(repository, never()).findById(any());
+        verify(repository, never()).save(any());
+        verify(mapper, never()).toDomain(any());
+        verify(mapper, never()).toResponse(any());
     }
 
     @Test
     public void update_deveAtualizarBook() {
+        var request = umBookRequest();
+        var categoria = umaCategoria();
+        var bookExistente = umBook();
+        var bookAtualizado = umBookNovo(request);
+
+        doReturn(Optional.of(umaCategoria())).when(categoriaRepository).findById(1);
+        doReturn(Optional.of(bookExistente)).when(repository).findById(1);
+        doReturn(bookAtualizado).when(mapper).toDomain(request);
+        doReturn(bookAtualizado).when(repository).save(bookAtualizado);
+
+        assertThat(bookExistente)
+                .extracting("id", "nome", "autor", "categoria", "dataLancamento")
+                .containsExactly(1, "UM programador 1", "Lucas Martins Arruda", categoria, LocalDate.of(2023, 1, 1));
+
+        bookService.update(1, request);
+
+        assertThat(bookAtualizado)
+                .extracting("id", "nome", "autor", "categoria", "dataLancamento")
+                .containsExactly(1, "UM programador 4", "Pedro Teste", categoria, LocalDate.of(2023, 1, 1));
+
+        verify(repository).save(bookAtualizado);
+        verify(mapper).toDomain(request);
+        verify(mapper).toResponse(bookAtualizado);
     }
 
     @Test
     public void update_deveRetornarExceptionQuandoBookNaoExistente() {
+        doReturn(Optional.of(umaCategoria())).when(categoriaRepository).findById(1);
+        doReturn(Optional.empty()).when(repository).findById(1);
+
+        assertThatThrownBy(() -> bookService.update(1, umBookRequest()))
+                .isInstanceOf(ValidacaoException.class)
+                .hasMessage("Book não Encontrado!!");
+
+        verify(categoriaRepository).findById(1);
+        verify(repository).findById(1);
+        verify(repository, never()).save(any());
+        verify(mapper, never()).toDomain(any());
+        verify(mapper, never()).toResponse(any());
     }
 
     @Test
     public void update_deveRetornarExceptionQuandoCategoriaNaoExistente() {
+        doReturn(Optional.empty()).when(categoriaRepository).findById(1);
+
+        assertThatThrownBy(() -> bookService.update(1, umBookRequest()))
+                .isInstanceOf(ValidacaoException.class)
+                .hasMessage("Categoria Não encontrada!!");
+
+        verify(categoriaRepository).findById(1);
+        verify(repository, never()).findById(1);
+        verify(repository, never()).save(any());
+        verify(mapper, never()).toDomain(any());
+        verify(mapper, never()).toResponse(any());
     }
 
     @Test

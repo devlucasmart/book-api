@@ -34,8 +34,8 @@ public class BookHelper {
 
     public static BookRequest umBookRequest() {
         return BookRequest.builder()
-                .nome("UM programador 1")
-                .autor("Lucas Martins Arruda")
+                .nome("UM programador 4")
+                .autor("Pedro Teste")
                 .categoria(umaCategoria())
                 .dataLancamento(LocalDate.of(2023, 1, 1))
                 .build();
