@@ -8,7 +8,6 @@ import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.repository.BookRepository;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.List;
 public class BookService {
     private final BookRepository repository;
     private final CategoriaRepository categoriaRepository;
-    private BookMapper mapper = Mappers.getMapper(BookMapper.class);
+    private final BookMapper mapper;
 
 
     public List<BookResponse> findAll() {
