@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.devlucasmart.book.helper.CategoriaHelper.umaCategoria;
+
 public class BookHelper {
     public static BookModel umBook() {
         return BookModel.builder()
@@ -84,13 +86,5 @@ public class BookHelper {
         listBookResponse.add(tresResponse);
 
         return listBookResponse;
-    }
-
-    public static CategoriaModel umaCategoria() {
-        return CategoriaModel.builder()
-                .id(1)
-                .nome("Ação")
-                .dataCriacao(LocalDate.of(2023, 1, 1))
-                .build();
     }
 }

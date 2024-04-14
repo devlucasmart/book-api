@@ -20,8 +20,8 @@ import java.util.Optional;
 import static com.devlucasmart.book.helper.BookHelper.umBook;
 import static com.devlucasmart.book.helper.BookHelper.umBookNovo;
 import static com.devlucasmart.book.helper.BookHelper.umBookRequest;
-import static com.devlucasmart.book.helper.BookHelper.umaCategoria;
 import static com.devlucasmart.book.helper.BookHelper.umaListaBook;
+import static com.devlucasmart.book.helper.CategoriaHelper.umaCategoria;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,14 +41,14 @@ public class BookServiceTest {
     @MockBean
     private CategoriaRepository categoriaRepository;
     @Autowired
-    private BookService bookService;
+    private BookService service;
 
     @Test
     public void findAll_deveRetornarTodosBooks() {
         var listBook = umaListaBook();
 
         doReturn(listBook).when(repository).findAll();
-        var result = bookService.findAll();
+        var result = service.findAll();
 
         verify(repository).findAll();
         verify(mapper).toListResponse(listBook);
@@ -63,7 +63,7 @@ public class BookServiceTest {
         doReturn(Optional.of(book)).when(repository).findById(1);
 
         BeanUtils.copyProperties(book, response);
-        bookService.findById(1);
+        service.findById(1);
 
         verify(repository).findById(1);
         verify(mapper).toResponse(book);
@@ -71,7 +71,7 @@ public class BookServiceTest {
 
     @Test
     public void findById_deveRetornarExceptionBookNaoExistente() {
-        assertThatThrownBy(() -> bookService.findById(4))
+        assertThatThrownBy(() -> service.findById(4))
                 .isInstanceOf(ValidacaoException.class)
                 .hasMessage("Book não Encontrado!!");
 
@@ -88,7 +88,7 @@ public class BookServiceTest {
         doReturn(bookNovo).when(mapper).toDomain(request);
         doReturn(bookNovo).when(repository).save(bookNovo);
 
-        bookService.save(request);
+        service.save(request);
 
         verify(repository).save(bookNovo);
         verify(mapper).toDomain(request);
@@ -97,7 +97,7 @@ public class BookServiceTest {
 
     @Test
     public void save_deveRetornarExceptionQuandoCategoriaNaoExistente() {
-        assertThatThrownBy(() -> bookService.save(umBookRequest()))
+        assertThatThrownBy(() -> service.save(umBookRequest()))
                 .isInstanceOf(ValidacaoException.class)
                 .hasMessage("Categoria Não encontrada!!");
 
@@ -124,7 +124,7 @@ public class BookServiceTest {
                 .extracting("id", "nome", "autor", "categoria", "dataLancamento")
                 .containsExactly(1, "UM programador 1", "Lucas Martins Arruda", categoria, LocalDate.of(2023, 1, 1));
 
-        bookService.update(1, request);
+        service.update(1, request);
 
         assertThat(bookAtualizado)
                 .extracting("id", "nome", "autor", "categoria", "dataLancamento")
@@ -140,7 +140,7 @@ public class BookServiceTest {
         doReturn(Optional.of(umaCategoria())).when(categoriaRepository).findById(1);
         doReturn(Optional.empty()).when(repository).findById(1);
 
-        assertThatThrownBy(() -> bookService.update(1, umBookRequest()))
+        assertThatThrownBy(() -> service.update(1, umBookRequest()))
                 .isInstanceOf(ValidacaoException.class)
                 .hasMessage("Book não Encontrado!!");
 
@@ -155,7 +155,7 @@ public class BookServiceTest {
     public void update_deveRetornarExceptionQuandoCategoriaNaoExistente() {
         doReturn(Optional.empty()).when(categoriaRepository).findById(1);
 
-        assertThatThrownBy(() -> bookService.update(1, umBookRequest()))
+        assertThatThrownBy(() -> service.update(1, umBookRequest()))
                 .isInstanceOf(ValidacaoException.class)
                 .hasMessage("Categoria Não encontrada!!");
 
@@ -170,7 +170,7 @@ public class BookServiceTest {
     public void delete_deveDeletarBook() {
         doReturn(Optional.of(umBook())).when(repository).findById(1);
 
-        bookService.delete(1);
+        service.delete(1);
 
         verify(repository).deleteById(1);
         verify(repository).findById(1);
