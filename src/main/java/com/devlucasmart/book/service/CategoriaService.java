@@ -7,17 +7,15 @@ import com.devlucasmart.book.mappers.CategoriaMapper;
 import com.devlucasmart.book.model.CategoriaModel;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class CategoriaService {
     private final CategoriaRepository repository;
-    private CategoriaMapper mapper = Mappers.getMapper(CategoriaMapper.class);
+    private final CategoriaMapper mapper;
 
     public List<CategoriaResponse> findAll(){
         var categorias = repository.findAll();
@@ -31,7 +29,6 @@ public class CategoriaService {
 
     public CategoriaResponse save(CategoriaRequest request){
         var categoria = mapper.toDomain(request);
-        categoria.setDataCriacao(LocalDateTime.now());
         return mapper.toResponse(repository.save(categoria));
     }
     public CategoriaResponse update(Integer id, CategoriaRequest request){

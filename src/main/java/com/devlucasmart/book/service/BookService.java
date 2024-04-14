@@ -8,10 +8,8 @@ import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.repository.BookRepository;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,8 +17,7 @@ import java.util.List;
 public class BookService {
     private final BookRepository repository;
     private final CategoriaRepository categoriaRepository;
-    private final BookMapper mapper = Mappers.getMapper(BookMapper.class);
-
+    private final BookMapper mapper;
 
     public List<BookResponse> findAll() {
         var books = repository.findAll();
@@ -35,7 +32,6 @@ public class BookService {
     public BookResponse save(BookRequest request) {
         validaCategoria(request.getCategoria().getId());
         var book = mapper.toDomain(request);
-        book.setDataLancamento(LocalDateTime.now());
         repository.save(book);
         return mapper.toResponse(book);
     }
