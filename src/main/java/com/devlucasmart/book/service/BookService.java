@@ -4,7 +4,6 @@ import com.devlucasmart.book.comum.exception.ValidacaoException;
 import com.devlucasmart.book.dto.book.BookRequest;
 import com.devlucasmart.book.dto.book.BookResponse;
 import com.devlucasmart.book.mappers.BookMapper;
-import com.devlucasmart.book.mappers.CategoriaMapper;
 import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.repository.BookRepository;
 import com.devlucasmart.book.repository.CategoriaRepository;
@@ -42,7 +41,12 @@ public class BookService {
     }
 
     public BookResponse update(Integer id, BookRequest request) {
-        return null;
+        validaCategoria(request.getCategoria().getId());
+        var bookExistente = getById(id);
+        var book = mapper.toDomain(request);
+        book.setId(bookExistente.getId());
+        book.setDataLancamento(bookExistente.getDataLancamento());
+        return mapper.toResponse(repository.save(book));
     }
 
     public void delete(Integer id) {

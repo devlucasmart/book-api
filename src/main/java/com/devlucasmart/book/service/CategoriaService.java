@@ -4,7 +4,6 @@ import com.devlucasmart.book.comum.exception.ValidacaoException;
 import com.devlucasmart.book.dto.categoria.CategoriaRequest;
 import com.devlucasmart.book.dto.categoria.CategoriaResponse;
 import com.devlucasmart.book.mappers.CategoriaMapper;
-import com.devlucasmart.book.model.BookModel;
 import com.devlucasmart.book.model.CategoriaModel;
 import com.devlucasmart.book.repository.CategoriaRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import java.util.List;
 public class CategoriaService {
     private final CategoriaRepository repository;
     private CategoriaMapper mapper = Mappers.getMapper(CategoriaMapper.class);
-
 
     public List<CategoriaResponse> findAll(){
         var categorias = repository.findAll();
@@ -37,7 +35,11 @@ public class CategoriaService {
         return mapper.toResponse(repository.save(categoria));
     }
     public CategoriaResponse update(Integer id, CategoriaRequest request){
-        return null;
+        var categoriaExistente = getById(id);
+        var categoria = mapper.toDomain(request);
+        categoria.setId(categoriaExistente.getId());
+        categoria.setDataCriacao(categoriaExistente.getDataCriacao());
+        return mapper.toResponse(repository.save(categoria));
     }
 
     public void delete(Integer id){
