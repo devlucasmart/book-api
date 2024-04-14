@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -32,7 +33,7 @@ public class BookModel implements Serializable {
     private String nome;
     private String autor;
     @Column(nullable = false)
-    private LocalDateTime dataLancamento;
+    private LocalDate dataLancamento;
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.DETACH)
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private CategoriaModel categoria;

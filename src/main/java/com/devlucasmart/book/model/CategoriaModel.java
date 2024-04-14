@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class CategoriaModel implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String nome;
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
     @JsonIgnore
     @OneToMany(mappedBy = "categoria", fetch = FetchType.EAGER)
     private List<BookModel> books;

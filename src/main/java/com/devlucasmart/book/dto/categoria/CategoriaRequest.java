@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,5 +14,5 @@ import java.time.LocalDateTime;
 @Builder
 public class CategoriaRequest {
     private String nome;
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 }
